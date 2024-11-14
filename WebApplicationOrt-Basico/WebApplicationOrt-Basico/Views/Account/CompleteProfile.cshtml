@@ -1,0 +1,33 @@
+﻿@model WebApplicationOrt_Basico.ViewModels.CompleteProfileViewModel
+
+@{
+    ViewData["Title"] = "Completar Perfil";
+}
+
+<h2>Complete Profile</h2>
+
+<form asp-action="CompleteProfile" method="post">
+    <div class="form-group">
+        <label asp-for="Apodo" class="control-label"></label>
+        <input asp-for="Apodo" class="form-control" />
+        <span asp-validation-for="Apodo" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="FechaInscripto" class="control-label"></label>
+        <input asp-for="FechaInscripto" class="form-control" />
+        <span asp-validation-for="FechaInscripto" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Genero" class="control-label"></label>
+        <select asp-for="Genero" class="form-control">
+            <option value="">Seleccione un género</option>
+            <option value="MASCULINO">Masculino</option>
+            <option value="FEMENINO">Femenino</option>
+        </select>
+        <span asp-validation-for="Genero" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="UserId" />
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Complete Profile</button>
+    </div>
+</form>

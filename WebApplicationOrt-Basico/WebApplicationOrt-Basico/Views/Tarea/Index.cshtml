@@ -1,0 +1,36 @@
+﻿@model IEnumerable<WebApplicationOrt_Basico.Models.Tarea>
+
+@{
+    ViewData["Title"] = "Lista de Tareas";
+}
+
+<h1>Lista de Tareas</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Título</th>
+            <th>Descripción</th>
+            <th>Estado</th>
+            <th>Fecha de Creación</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tarea in Model)
+        {
+            <tr>
+                <td>@tarea.Titulo</td>
+                <td>@tarea.Descripcion</td>
+                <td>@tarea.Estado</td>
+                <td>@tarea.FechaCreacion</td>
+                <td>
+                    <a asp-action="Editar" asp-route-id="@tarea.IdTarea" class="btn btn-warning">Editar</a>
+                    <a asp-action="Eliminar" asp-route-id="@tarea.IdTarea" class="btn btn-danger">Eliminar</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Crear" class="btn btn-primary">Crear Nueva Tarea</a>
