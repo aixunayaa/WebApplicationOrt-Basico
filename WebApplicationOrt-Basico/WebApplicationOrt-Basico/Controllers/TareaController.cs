@@ -31,7 +31,7 @@ namespace WebApplicationOrt_Basico.Controllers
             var result = await _tareaService.CrearTareaAsync(tarea);
             if (!result)
             {
-                ModelState.AddModelError("", "No puedes tener más de 5 tareas pendientes.");
+                ModelState.AddModelError("", "Usted no puede seguir creando tareas pendientes ya que tiene 5 anteriores.");
                 return View(tarea);
             }
 

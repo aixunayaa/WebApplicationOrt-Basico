@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplicationOrt_Basico.ViewModels
+namespace WebApplicationOrt_Basico.Models
 {
     public class LoginViewModel
     {
@@ -11,8 +11,5 @@ namespace WebApplicationOrt_Basico.ViewModels
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
     }
 }

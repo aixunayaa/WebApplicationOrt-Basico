@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using WebApplicationOrt_Basico.Models;
 
 namespace WebApplicationOrt_Basico.ViewModels
 {
@@ -6,15 +7,23 @@ namespace WebApplicationOrt_Basico.ViewModels
     {
         [Required]
         [EmailAddress]
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
         [Required]
         [DataType(DataType.Password)]
-        public required string Password { get; set; }
+        public string Password { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public required string ConfirmPassword { get; set; }
+        public string ConfirmPassword { get; set; }
+
+        public string Apodo { get; set; }
+
+        [Display(Name = "Fecha inscripción")]
+        public DateTime FechaInscripto { get; set; }
+
+        [EnumDataType(typeof(Genero))]
+        public Genero? Genero { get; set; }
     }
 }

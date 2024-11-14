@@ -1,83 +1,31 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using WebApplicationOrt_Basico.Models;
-using WebApplicationOrt_Basico.ViewModels;
+using WebApplicationOrt_Basico.Services;
+using System.Threading.Tasks;
 
 namespace WebApplicationOrt_Basico.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        private readonly UserService _userService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+        public AccountController(UserService userService)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            _userService = userService;
         }
 
-        [HttpGet]
-        public IActionResult Register()
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("CompleteProfile", "Account", new { userId = user.Id });
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
-            }
-
-            return View(model);
-        }
-
-        [HttpGet]
-        public IActionResult CompleteProfile(string userId)
-        {
-            var model = new CompleteProfileViewModel { UserId = userId };
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> CompleteProfile(CompleteProfileViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = await _userManager.FindByIdAsync(model.UserId);
+                var user = await _userService.AuthenticateAsync(model.Email, model.Password);
                 if (user != null)
                 {
-                    user.Apodo = model.Apodo;
-                    user.FechaInscripto = model.FechaInscripto;
-                    user.Genero = model.Genero;
-
-                    var result = await _userManager.UpdateAsync(user);
-                    if (result.Succeeded)
-                    {
-                        return RedirectToAction("Index", "Home");
-                    }
-
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
-                }
-            }
-
-            return View(model);
-        }
-    }
-}
+                    // Aquí puedes agregar la lógica para establecer la sesión del usuario
+                    // Por 

@@ -18,5 +18,13 @@ namespace WebApplicationOrt_Basico.Models
 
         [EnumDataType(typeof(Genero))]
         public Genero Genero { get; set; }
+
+        [Required]
+        [DataType(DataType.EmailAddress)]
+        public string Email { get; set; } = string.Empty;
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Contrasenia { get; set; } = string.Empty;
     }
 }
