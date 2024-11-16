@@ -2,21 +2,30 @@
 using WebApplicationOrt_Basico.Models;
 using WebApplicationOrt_Basico.Services;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace WebApplicationOrt_Basico.Controllers
 {
     public class TareaController : Controller
     {
         private readonly TareaService _tareaService;
+        private readonly AuthService _authService;
 
-        public TareaController(TareaService tareaService)
+        public TareaController(TareaService tareaService, AuthService authService)
         {
             _tareaService = tareaService;
+            _authService = authService;
         }
 
         public IActionResult Index()
         {
-            var tareas = _tareaService.ObtenerTareas();
+            var user = _authService.GetAuthenticatedUser();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var tareas = _tareaService.ObtenerTareas().Where(t => t.UserId == user.IdUsuario);
             return View(tareas);
         }
 
@@ -28,6 +37,13 @@ namespace WebApplicationOrt_Basico.Controllers
         [HttpPost]
         public async Task<IActionResult> Crear(Tarea tarea)
         {
+            var user = _authService.GetAuthenticatedUser();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            tarea.UserId = user.IdUsuario;
             var result = await _tareaService.CrearTareaAsync(tarea);
             if (!result)
             {

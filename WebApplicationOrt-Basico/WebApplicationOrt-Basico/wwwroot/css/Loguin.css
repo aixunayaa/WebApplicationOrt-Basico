@@ -1,0 +1,46 @@
+﻿body {
+    background-image: url('../Images/BackgroundLoguin.jpg'); 
+    background-size: cover; 
+    background-repeat: no-repeat; 
+    background-position: center; 
+}
+.login-container {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-top: 10rem !important;
+}
+
+    .login-container .form-label {
+        font-weight: bold;
+    }
+
+    .login-container .form-control {
+        margin-bottom: 15px;
+    }
+
+    .login-container .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .login-container .btn:hover {
+            background-color: #0056b3;
+        }
+
+    .login-container .text-danger {
+        color: red;
+        text-align: center;
+    }
+
+h2 {
+    text-align: center;
+}

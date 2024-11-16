@@ -1,31 +1,42 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebApplicationOrt_Basico.Models;
 using WebApplicationOrt_Basico.Services;
-using System.Threading.Tasks;
 
 namespace WebApplicationOrt_Basico.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserService _userService;
+        private readonly AuthService _authService;
 
-        public AccountController(UserService userService)
+        public AccountController(AuthService authService)
         {
-            _userService = userService;
+            _authService = authService;
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(string email, string password)
         {
-            if (ModelState.IsValid)
+            var user = await _authService.AuthenticateAsync(email, password);
+            if (user != null)
             {
-                var user = await _userService.AuthenticateAsync(model.Email, model.Password);
-                if (user != null)
-                {
-                    // Aquí puedes agregar la lógica para establecer la sesión del usuario
-                    // Por 
+                return RedirectToAction("Index", "Tarea");
+            }
+
+            ViewBag.ErrorMessage = "Email o contraseña incorrectos.";
+            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await _authService.LogoutAsync();
+            return RedirectToAction("Login");
+        }
+    }
+}
