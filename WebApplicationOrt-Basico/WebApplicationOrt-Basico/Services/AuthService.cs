@@ -45,6 +45,21 @@ public class AuthService
         return user;
     }
 
+    public async Task<bool> RegisterUserAsync(CustomUser user)
+    {
+        // Verificar si el usuario ya existe
+        var existingUser = await _context.Users.SingleOrDefaultAsync(u => u.Email == user.Email);
+        if (existingUser != null)
+        {
+            return false; // El usuario ya existe
+        }
+
+        // Agregar el nuevo usuario a la base de datos sin hashear la contraseña
+        _context.Users.Add(user);
+        var result = await _context.SaveChangesAsync();
+        return result > 0;
+    }
+
     public CustomUser GetAuthenticatedUser()
     {
         var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);

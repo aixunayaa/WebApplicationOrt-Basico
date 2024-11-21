@@ -20,9 +20,9 @@ namespace WebApplicationOrt_Basico.Services
             return _context.Tareas.ToList();
         }
 
-        public Tarea ObtenerTareaPorId(int id)
+        public async Task<Tarea> ObtenerTareaPorId(int id)
         {
-            return _context.Tareas.Find(id);
+            return await _context.Tareas.FindAsync(id);
         }
 
         public async Task<bool> CrearTareaAsync(Tarea tarea)
@@ -41,10 +41,23 @@ namespace WebApplicationOrt_Basico.Services
             return true;
         }
 
-        public async Task ActualizarTareaAsync(Tarea tarea)
+        public async Task<bool> ActualizarTareaAsync(Tarea tarea)
         {
-            _context.Tareas.Update(tarea);
+            var tareaExistente = await _context.Tareas.FindAsync(tarea.IdTarea);
+            if (tareaExistente == null)
+            {
+                return false;
+            }
+
+            tareaExistente.Titulo = tarea.Titulo;
+            tareaExistente.Descripcion = tarea.Descripcion;
+            tareaExistente.Estado = tarea.Estado;
+            tareaExistente.FechaCreacion = tarea.FechaCreacion;
+            tareaExistente.UserId = tarea.UserId;
+
+            _context.Tareas.Update(tareaExistente);
             await _context.SaveChangesAsync();
+            return true;
         }
 
         public async Task EliminarTareaAsync(int id)

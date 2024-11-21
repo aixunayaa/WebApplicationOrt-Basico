@@ -1,39 +1,62 @@
 ﻿@model WebApplicationOrt_Basico.ViewModels.RegisterViewModel
 
-<form asp-action="Register" method="post">
-    <div class="form-group">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Registro de Usuario</h4>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Register" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Email" class="control-label"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" class="form-control" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="ConfirmPassword" class="control-label"></label>
+                            <input asp-for="ConfirmPassword" class="form-control" type="password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Apodo" class="control-label"></label>
+                            <input asp-for="Apodo" class="form-control" />
+                            <span asp-validation-for="Apodo" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="FechaInscripto" class="control-label"></label>
+                            <input asp-for="FechaInscripto" class="form-control" type="date" />
+                            <span asp-validation-for="FechaInscripto" class="text-danger"></span>
+                        </div>
+                        <div class="form-group mb-3">
+                            <label asp-for="Genero" class="control-label"></label>
+                            <select asp-for="Genero" class="form-control">
+                                <option value="">Seleccione un género</option>
+                                <option value="1">Masculino</option>
+                                <option value="2">Femenino</option>
+                            </select>
+                            <span asp-validation-for="Genero" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Registrar</button>
+                            <a asp-action="Login" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="ConfirmPassword"></label>
-        <input asp-for="ConfirmPassword" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Apodo"></label>
-        <input asp-for="Apodo" class="form-control" />
-        <span asp-validation-for="Apodo" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="FechaInscripto"></label>
-        <input asp-for="FechaInscripto" class="form-control" />
-        <span asp-validation-for="FechaInscripto" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Genero"></label>
-        <select asp-for="Genero" class="form-control">
-            <option value="">Seleccione un género</option>
-            <option value="1">Masculino</option>
-            <option value="2">Femenino</option>
-        </select>
-        <span asp-validation-for="Genero" class="text-danger"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Registrar</button>
-</form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

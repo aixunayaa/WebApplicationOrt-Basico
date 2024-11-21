@@ -29,6 +29,27 @@ namespace WebApplicationOrt_Basico.Controllers
             return View(tareas);
         }
 
+
+        [HttpPost]
+        public IActionResult Filtrar(string estado)
+        {
+            var user = _authService.GetAuthenticatedUser();
+            if (user == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var tareas = _tareaService.ObtenerTareas().Where(t => t.UserId == user.IdUsuario);
+
+            if (!string.IsNullOrEmpty(estado))
+            {
+                Enum.TryParse(estado, out Estado estadoEnum);
+                tareas = tareas.Where(t => t.Estado == estadoEnum);
+            }
+
+            return View("Index", tareas);
+        }
+
         public IActionResult Crear()
         {
             return View();
@@ -44,6 +65,7 @@ namespace WebApplicationOrt_Basico.Controllers
             }
 
             tarea.UserId = user.IdUsuario;
+
             var result = await _tareaService.CrearTareaAsync(tarea);
             if (!result)
             {
@@ -53,10 +75,32 @@ namespace WebApplicationOrt_Basico.Controllers
 
             return RedirectToAction("Index");
         }
-
-        public IActionResult Editar(int id)
+        [HttpPost]
+        public async Task<IActionResult> Completar(int id, bool completar)
         {
-            var tarea = _tareaService.ObtenerTareaPorId(id);
+            var tarea = await _tareaService.ObtenerTareaPorId(id);
+            if (tarea == null)
+            {
+                return NotFound();
+            }
+
+            tarea.Estado = completar ? Estado.FINALIZADO : Estado.PENDIENTE;
+            var resultado = await _tareaService.ActualizarTareaAsync(tarea);
+
+            if (!resultado)
+            {
+                return StatusCode(500, "Error al actualizar la tarea.");
+            }
+
+            return Ok();
+        }
+
+           
+        
+
+        public async Task<IActionResult> Editar(int id)
+        {
+            var tarea = await _tareaService.ObtenerTareaPorId(id);
             if (tarea == null)
             {
                 return NotFound();
@@ -69,15 +113,20 @@ namespace WebApplicationOrt_Basico.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _tareaService.ActualizarTareaAsync(tarea);
+                var resultado = await _tareaService.ActualizarTareaAsync(tarea);
+                if (!resultado)
+                {
+                    return NotFound();
+                }
+
                 return RedirectToAction("Index");
             }
             return View(tarea);
         }
 
-        public IActionResult Eliminar(int id)
+        public async Task<IActionResult> Eliminar(int id)
         {
-            var tarea = _tareaService.ObtenerTareaPorId(id);
+            var tarea = await _tareaService.ObtenerTareaPorId(id);
             if (tarea == null)
             {
                 return NotFound();

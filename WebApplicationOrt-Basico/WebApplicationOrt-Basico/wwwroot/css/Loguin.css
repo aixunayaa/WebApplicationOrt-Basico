@@ -1,9 +1,10 @@
 ﻿body {
-    background-image: url('../Images/BackgroundLoguin.jpg'); 
-    background-size: cover; 
-    background-repeat: no-repeat; 
-    background-position: center; 
+    background-image: url('../Images/BackgroundLoguin.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
 }
+
 .login-container {
     max-width: 400px;
     margin: 0 auto;
@@ -43,4 +44,7 @@
 
 h2 {
     text-align: center;
+}
+#Loguin .col-md-6 {
+    width: 100%;
 }

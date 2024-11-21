@@ -4,33 +4,88 @@
     ViewData["Title"] = "Lista de Tareas";
 }
 
-<h1>Lista de Tareas</h1>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Lista de Tareas</h1>
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Filtrar" method="post" class="mb-3">
+                        <div class="form-group">
+                            <label for="estado">Filtrar por Estado:</label>
+                            <select id="estado" name="estado" class="form-control">
+                                <option value="">Todos</option>
+                                <option value="PENDIENTE">Pendiente</option>
+                                <option value="EN_PROCESO">En Proceso</option>
+                                <option value="FINALIZADO">Finalizado</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary mt-2">Filtrar</button>
+                    </form>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Completar</th>
+                                <th>Título</th>
+                                <th>Descripción</th>
+                                <th>Estado</th>
+                                <th>Fecha de Creación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tarea in Model)
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Título</th>
-            <th>Descripción</th>
-            <th>Estado</th>
-            <th>Fecha de Creación</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var tarea in Model)
-        {
-            <tr>
-                <td>@tarea.Titulo</td>
-                <td>@tarea.Descripcion</td>
-                <td>@tarea.Estado</td>
-                <td>@tarea.FechaCreacion</td>
-                <td>
-                    <a asp-action="Editar" asp-route-id="@tarea.IdTarea" class="btn btn-warning">Editar</a>
-                    <a asp-action="Eliminar" asp-route-id="@tarea.IdTarea" class="btn btn-danger">Eliminar</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                            {
+                                <tr class="tarea-row" data-id="@tarea.IdTarea" style="background-color: @(tarea.Estado == Estado.FINALIZADO ? "lightgreen" : "white")">
+                                    <td>
+                                        <input type="checkbox" class="completar-checkbox" @(tarea.Estado == Estado.FINALIZADO ? "checked" : "") />
+                                    </td>
+                                    <td>@tarea.Titulo</td>
+                                    <td>@tarea.Descripcion</td>
+                                    <td>@tarea.Estado</td>
+                                    <td>@tarea.FechaCreacion.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <a asp-action="Editar" asp-route-id="@tarea.IdTarea" class="btn btn-warning btn-sm">Editar</a>
+                                        <a asp-action="Eliminar" asp-route-id="@tarea.IdTarea" class="btn btn-danger btn-sm">Eliminar</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-end">
+                        <a asp-action="Crear" class="btn btn-primary">Crear Nueva Tarea</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<a asp-action="Crear" class="btn btn-primary">Crear Nueva Tarea</a>
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelectorAll(".completar-checkbox").forEach(function (checkbox) {
+                checkbox.addEventListener("change", function () {
+                    var row = this.closest(".tarea-row");
+                    var tareaId = row.getAttribute("data-id");
+                    var completar = this.checked;
+
+                    fetch(`/Tarea/Completar/${tareaId}?completar=${completar}`, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "RequestVerificationToken": document.querySelector('input[name="__RequestVerificationToken"]').value
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            location.reload();
+                        } else {
+                            alert("Error al actualizar la tarea.");
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}
